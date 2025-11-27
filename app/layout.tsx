@@ -18,8 +18,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Хогвартс",
+  },
+  icons: {
+    icon: "/icons/icon-192x192.svg",
+    apple: "/icons/icon-192x192.svg",
   },
 };
 
@@ -37,6 +41,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk">
+      <head>
+        <link rel="icon" href="/icons/icon-192x192.svg" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
+        <meta name="theme-color" content="#6B46C1" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
