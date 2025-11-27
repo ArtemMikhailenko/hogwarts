@@ -8,7 +8,7 @@ export function ProgramProgress() {
 
   return (
     <Link href="/progress">
-      <div className="bg-gradient-to-r from-[#5B7FFF] to-[#4A6AE8] rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+      <div className="bg-gradient-to-r from-[#5B7FFF] to-[#4A6AE8] rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer mb-3">
         <div className="space-y-4">
           {/* Title */}
           <h2 className="text-2xl font-bold text-white">

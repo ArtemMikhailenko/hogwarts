@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, ChevronDown, MoreHorizontal } from 'lucide-react';
 
 interface ScheduleModalProps {
@@ -18,30 +18,46 @@ export function ScheduleModal({ isOpen, onClose }: ScheduleModalProps) {
   const today = 28;
   const importantDates = [22, 23, 24, 25, 26, 28];
 
+  // Блокуємо скрол body коли модалка відкрита
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup при unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-md mx-4 mt-20 animate-in slide-in-from-bottom h-full duration-300">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-50">
-            <button
-              onClick={onClose}
-              className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
-            >
-              <X className="w-5 h-5" />
-              <span className="font-medium">Закрить</span>
-            </button>
-            <div className="flex items-center gap-3">
-              <ChevronDown className="w-5 h-5 text-gray-600" />
-              <MoreHorizontal className="w-5 h-5 text-gray-600" />
-            </div>
+    <div className="fixed mb-0 inset-0 z-50 flex flex-col bg-black/50 backdrop-blur-sm">
+      <div className="w-full flex flex-col h-full">
+        {/* Header - Above modal */}
+        <div className="flex items-center justify-between px-4 py-3 pt-10 flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 text-white hover:text-white/80 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm"
+          >
+            <X className="w-5 h-5" />
+            <span className="font-medium">Закрыть</span>
+          </button>
+          <div className="flex items-center gap-3 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
+            <ChevronDown className="w-5 h-5 text-white" />
+            <MoreHorizontal className="w-5 h-5 text-white" />
           </div>
+        </div>
 
-          {/* Calendar */}
-          <div className="p-4">
-            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br h-full from-[#10A3FE] to-[#2173FF] p-4">
+        {/* Modal Content */}
+        <div className="bg-white mx-4 rounded-t-3xl shadow-2xl overflow-hidden flex flex-col flex-1">
+          {/* Calendar and Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto pb-20">
+            <div className="p-4">
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#10A3FE] to-[#2173FF] p-4">
               {/* Month title */}
               <h3 className="text-white text-xl font-bold text-center mb-4">
                 {currentMonth}
@@ -85,7 +101,7 @@ export function ScheduleModal({ isOpen, onClose }: ScheduleModalProps) {
             {/* Schedule section */}
             <div className="mt-4">
               <h2 className="text-lg font-bold text-gray-900 mb-3 border-b border-gray-200 pb-3">
-                Розкладу на тиждень
+                Розклад на тиждень
               </h2>
 
               <div className="space-y-4 text-sm">
@@ -122,6 +138,7 @@ export function ScheduleModal({ isOpen, onClose }: ScheduleModalProps) {
                   </p>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
