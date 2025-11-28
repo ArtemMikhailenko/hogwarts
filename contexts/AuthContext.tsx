@@ -50,6 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const response = await authService.login({ email, password });
     setUser(response.user);
+    // Дочекатись поки cookie встановиться
+    await new Promise(resolve => setTimeout(resolve, 100));
   };
 
   const logout = async () => {
