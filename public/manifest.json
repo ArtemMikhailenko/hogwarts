@@ -1,6 +1,6 @@
 {
-  "name": "Hogwarts Learning Platform",
-  "short_name": "Хогвартс",
+  "name": "Навчання",
+  "short_name": "Навчання",
   "description": "Магічна платформа навчання з геймифікацією",
   "start_url": "/",
   "display": "standalone",
