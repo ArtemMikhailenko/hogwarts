@@ -21,6 +21,7 @@ export default function MyProgressPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -82,6 +83,13 @@ export default function MyProgressPage() {
     }
   };
 
+  const handleLogout = () => {
+    // Видаляємо токен
+    localStorage.removeItem('token');
+    // Перенаправляємо на логін
+    router.push('/login');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] pb-24 max-w-md mx-auto flex items-center justify-center">
@@ -104,13 +112,43 @@ export default function MyProgressPage() {
         <div className="relative  pt-8 pb-20">
         {/* Header кнопки */}
         <div className="absolute top-6 left-0 right-0 px-4 flex items-center justify-between">
-          <button className="flex items-center gap-2 px-4 py-2 bg-black/20 backdrop-blur-md rounded-[32px]">
+          <button 
+            onClick={() => router.back()}
+            className="flex items-center gap-2 px-4 py-2 bg-black/20 backdrop-blur-md rounded-[32px] hover:bg-black/30 transition-colors"
+          >
             <X className="w-5 h-5 text-white" />
             <span className="text-sm font-medium text-white">Закрить</span>
           </button>
-          <div className="flex items-center gap-3 px-4 py-2 bg-black/20 backdrop-blur-md rounded-[32px]">
-            <ChevronDown className="w-5 h-5 text-white" />
-            <MoreHorizontal className="w-5 h-5 text-white" />
+          <div className="relative">
+            <button 
+              onClick={() => setShowMenu(!showMenu)}
+              className="flex items-center gap-3 px-4 py-2 bg-black/20 backdrop-blur-md rounded-[32px] hover:bg-black/30 transition-colors"
+            >
+              <ChevronDown className="w-5 h-5 text-white" />
+              <MoreHorizontal className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Dropdown меню */}
+            {showMenu && (
+              <>
+                {/* Backdrop для закриття */}
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setShowMenu(false)}
+                />
+                
+                {/* Саме меню */}
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-2xl shadow-lg overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+                  >
+                    <span>🚪</span>
+                    <span>Вийти</span>
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
