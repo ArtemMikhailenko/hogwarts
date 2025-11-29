@@ -4,6 +4,8 @@ import { X, Heart, Download, ChevronDown, Play } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { modulesService } from '@/lib/services/modules.service';
+import { favoritesService } from '@/lib/services/favorites.service';
+import { progressService } from '@/lib/services/progress.service';
 
 // Helper function to extract YouTube video ID
 const getYouTubeVideoId = (url: string) => {
@@ -33,12 +35,15 @@ export default function LessonPage() {
   const [lessonData, setLessonData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
 
   const moduleId = params.id as string;
   const lessonNumber = parseInt(params.lessonId as string);
 
   useEffect(() => {
     loadLesson();
+    checkFavoriteStatus();
   }, [moduleId, lessonNumber]);
 
   const loadLesson = async () => {
@@ -62,7 +67,15 @@ export default function LessonPage() {
             url: presentationMaterial.url,
           } : null,
         });
-        setIsCompleted(lesson.isCompleted);
+        
+        // Завантажуємо статус завершення з прогресу користувача
+        try {
+          const status = await progressService.getLessonStatus(moduleId, lessonNumber);
+          setIsCompleted(status.isCompleted);
+        } catch (error) {
+          console.error('Failed to load lesson status:', error);
+          setIsCompleted(false);
+        }
       }
     } catch (error) {
       console.error('Failed to load lesson:', error);
@@ -71,13 +84,49 @@ export default function LessonPage() {
     }
   };
 
+  const checkFavoriteStatus = async () => {
+    try {
+      const status = await favoritesService.checkIsFavorite(moduleId, lessonNumber);
+      setIsFavorite(status);
+    } catch (error) {
+      console.error('Failed to check favorite status:', error);
+    }
+  };
+
   const handleMarkAsCompleted = async () => {
     try {
       const newStatus = !isCompleted;
-      await modulesService.markLessonComplete(moduleId, lessonNumber, newStatus);
+      
+      if (newStatus) {
+        // Позначити як завершений
+        await progressService.completeLesson(moduleId, lessonNumber);
+      } else {
+        // Зняти позначку завершення
+        await progressService.uncompleteLesson(moduleId, lessonNumber);
+      }
+      
       setIsCompleted(newStatus);
     } catch (error) {
       console.error('Failed to update lesson completion:', error);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (favoriteLoading) return;
+
+    setFavoriteLoading(true);
+    try {
+      if (isFavorite) {
+        await favoritesService.removeFromFavorites(moduleId, lessonNumber);
+        setIsFavorite(false);
+      } else {
+        await favoritesService.addToFavorites(moduleId, lessonNumber);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+    } finally {
+      setFavoriteLoading(false);
     }
   };
 
@@ -176,8 +225,18 @@ export default function LessonPage() {
                 </button>
 
                 {/* Favorite button */}
-                <button className="w-10 h-10 bg-[#F2F2F2] backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-gray-200 transition-colors">
-                  <Heart className="w-5 h-5 text-black" />
+                <button 
+                  onClick={handleToggleFavorite}
+                  disabled={favoriteLoading}
+                  className="w-10 h-10 bg-[#F2F2F2] backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-gray-200 transition-all disabled:opacity-50"
+                >
+                  <Heart 
+                    className={`w-5 h-5 transition-all ${
+                      isFavorite 
+                        ? 'text-red-500 fill-red-500' 
+                        : 'text-black'
+                    }`}
+                  />
                 </button>
               </div>
             </div>

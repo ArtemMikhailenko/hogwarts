@@ -41,7 +41,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#10A3FE] to-[#2173FF] flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-[#0f58ef] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Logo & Title */}
         <div className="text-center mb-8 drop-shadow-2xl rounded-3xl ">
@@ -58,14 +58,22 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form Card */}
-        <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Увійти до платформи</h2>
+        <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-[0_8px_32px_rgba(15,88,239,0.2)] relative overflow-hidden">
+          {/* Decorative gradient bar */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10A3FE] via-blue-500 to-[#2173FF]"></div>
           
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Вітаємо! 👋
+            </h2>
+            <p className="text-sm text-gray-500">Увійдіть до свого облікового запису</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                Email
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2.5">
+                📧 Email адреса
               </label>
               <input
                 id="email"
@@ -73,7 +81,7 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition text-gray-900 placeholder:text-gray-400"
+                className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all text-gray-900 placeholder:text-gray-400"
                 placeholder="your@email.com"
                 disabled={isLoading}
               />
@@ -81,8 +89,8 @@ export default function LoginPage() {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                Пароль
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2.5">
+                🔒 Пароль
               </label>
               <div className="relative">
                 <input
@@ -91,14 +99,14 @@ export default function LoginPage() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition pr-12 text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all pr-12 text-gray-900 placeholder:text-gray-400"
                   placeholder="••••••••"
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-lg"
                   disabled={isLoading}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -117,7 +125,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-gradient-to-r from-[#10A3FE] to-[#2173FF] text-white font-bold text-lg rounded-xl hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+              className="mt-8 w-full py-4 bg-gradient-to-r from-[#10A3FE] to-[#2173FF] text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -126,20 +134,28 @@ export default function LoginPage() {
                 </>
               ) : (
                 <>
-                  <span>Увійти</span>
-                  <span className="text-xl">→</span>
+                  <span>Увійти в платформу</span>
+                  <span className="text-xl">✨</span>
                 </>
               )}
             </button>
           </form>
 
           {/* Help Text */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-center gap-2 text-gray-500">
-              <span className="text-lg">ℹ️</span>
-              <p className="text-sm">
-                Отримайте дані для входу у адміністратора
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <div className="text-center">
+              <p className="text-sm text-gray-600 mb-4">
+                Проблеми зі входом?
               </p>
+              <a 
+                href="http://t.me/dimashevchuck_support" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium rounded-xl transition-all duration-200 border border-gray-200 hover:border-gray-300"
+              >
+                <span className="text-lg">💬</span>
+                <span>Написати в підтримку</span>
+              </a>
             </div>
           </div>
         </div>
@@ -147,7 +163,7 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-white/60 text-sm">
-            © 2025 Школа чаклунства та магії Хогвартс
+            © Дмитро Шевчук, Академія запусків
           </p>
         </div>
       </div>

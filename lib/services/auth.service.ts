@@ -17,6 +17,7 @@ interface AuthResponse {
     faculty?: string;
     hasCompletedSorting: boolean;
     hasAcceptedRules: boolean;
+    hasSeenWelcomeModal?: boolean;
     isAdmin: boolean;
   };
 }
